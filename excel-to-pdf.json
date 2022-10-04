@@ -1,0 +1,5 @@
+{
+    "config": "excel-to-pdf.json",
+    "input": "sample.xls",
+    "output": "sample.pdf"
+}

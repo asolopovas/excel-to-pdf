@@ -1,70 +1,78 @@
+import inspect
 import io
 import os
+import sys
+import tempfile
+import argparse
 from win32com import client
 from PyPDF2 import PdfFileReader, PdfFileWriter
 from reportlab.pdfgen import canvas
 from reportlab.lib.pagesizes import letter
 from pdfCropMargins import crop
+from lib import delete_files
 
+parser = argparse.ArgumentParser()
+parser.add_argument('--foo', help='foo help')
+args = parser.parse_args()
 
-def delete_files(files):
-    for file in files:
-        if os.path.exists(file):
-            os.remove(file)
+dir_tmp = tempfile.gettempdir()
+dir_exec = os.getcwd()
+dir_script = os.path.dirname(
+    os.path.abspath(inspect.getfile(inspect.currentframe()))
+)
 
-delete_files(['template_resize.pdf', 'template_cropped.pdf'])
+# file_src = os.path.abspath(sys.argv[1])
+# if not file_src.endswith(".xlsx"):
+#     print("Error: File extension must be .xlsx")
+#     exit()
+# filename = os.path.splitext(file_src)[0]
 
-# Open Microsoft Excel
-excel = client.Dispatch("Excel.Application")
+# file_out = filename + ".pdf"
+# # if output file exist
+# if os.path.exists(file_out) or os.path.exists(filename + "_cropped.pdf"):
+#     delete_files([file_out, filename + "_cropped.pdf"])
 
-# Read Excel File
-sheets = excel.Workbooks.Open('C:\\Users\\asolo\\git\\excel-to-pdf\\template.xlsx')
-work_sheets = sheets.Worksheets[0]
+# file_outPath = os.path.join(dir_exec, file_out)
 
-# Remove all footers and headers
-work_sheets.PageSetup.LeftFooter = ""
-work_sheets.PageSetup.CenterFooter = ""
-work_sheets.PageSetup.RightFooter = ""
-work_sheets.PageSetup.LeftHeader = ""
-work_sheets.PageSetup.CenterHeader = ""
-work_sheets.PageSetup.RightHeader = ""
+# # Open Microsoft Excel
+# excel = client.Dispatch("Excel.Application")
 
-# Convert into PDF File
-work_sheets.ExportAsFixedFormat(0, 'C:\\Users\\asolo\\git\\excel-to-pdf\\template.pdf')
+# # Read Excel File
+# sheets = excel.Workbooks.Open(file_src)
+# work_sheets = sheets.Worksheets[0]
 
-# close document without saving
-sheets.Close(False)
-excel.Application.Quit()
+# # Remove all footers and headers
+# work_sheets.PageSetup.LeftFooter = ""
+# work_sheets.PageSetup.CenterFooter = ""
+# work_sheets.PageSetup.RightFooter = ""
+# work_sheets.PageSetup.LeftHeader = ""
+# work_sheets.PageSetup.CenterHeader = ""
+# work_sheets.PageSetup.RightHeader = ""
 
-crop(["-p", "0", "template.pdf"])
+# work_sheets.ExportAsFixedFormat(0, file_outPath)
 
-def resize_pdf(input_pdf, width):
-    file = open(input_pdf, 'rb')
-    pdf = PdfFileReader(file)
-    page0 = pdf.getPage(0)
-    content_width = page0.mediaBox.getWidth()
-    content_height = page0.mediaBox.getHeight()
+# # close document without saving
+# sheets.Close(False)
+# excel.Application.Quit()
 
-    # convert width to mm
-    content_width_mm=float(content_width)/72.0*25.4
+# crop(["-p", "0", file_outPath])
 
-    # coluate sacle factor
-    scale_factor = width/content_width_mm
+# # def resize_pdf(input_pdf, width):
+# #     file = open(input_pdf, 'rb')
+# #     pdf = PdfFileReader(file)
+# #     page0 = pdf.getPage(0)
+# #     content_width = page0.mediaBox.getWidth()
+# #     content_height = page0.mediaBox.getHeight()
 
-    page0.scaleBy(scale_factor)  # float representing scale factor - this happens in-place
-    # close the input file
+# #     # convert width to mm
+# #     content_width_mm=float(content_width)/72.0*25.4
 
-    return page0
+# #     # coluate sacle factor
+# #     scale_factor = width/content_width_mm
 
-page = resize_pdf("template_cropped.pdf", 100)
+# #     page0.scaleBy(scale_factor)  # float representing scale factor - this happens in-place
+# #     # close the input file
 
+# #     return page0
 
-# create letter size pdf and place page into it
-packet = io.BytesIO()
-can = canvas.Canvas(packet, pagesize=letter)
-can.setPageSize((page.mediaBox.getWidth(), page.mediaBox.getHeight()))
-can.doForm('page', page)
-can.save()
-
-
-
+# # page = resize_pdf("template_cropped.pdf", 100)

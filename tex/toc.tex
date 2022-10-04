@@ -1,0 +1,43 @@
+
+% ----------------------------------------------------------
+
+\renewcommand{\thechapter}{\Ordinalstring{chapter}}
+\renewcommand{\thesection}{\arabic{section}}
+\renewcommand{\thesubsection}{\arabic{chapter}.\arabic{section}.\arabic{subsection}}
+
+% Title Page
+\usepackage{titletoc}
+    \titlecontents{chapter}
+                  [0em]
+                  {\bfseries}
+                  {Chapter \thecontentslabel\\*\hspace*{.7em}}
+                  {}
+                  {\hfill\contentspage}
+    \titlecontents{section}
+                  [1.5em]
+                  {}
+                  {\thecontentslabel\hspace*{.7em}}
+                  {}
+                  {\titlerule*[.5pc]{.}\contentspage}
+    \titlecontents*{subsection}
+                  [3.8em]
+                  {}
+                  {\thecontentslabel\\*\hspace*{.7em}}
+                  {}
+                  {\titlerule*[.5pc]{.}\contentspage}
+
+% Body
+\usepackage[rigidchapters]{titlesec}
+    \titleformat{\section}
+                [display]
+                {\centering\fontsize{20pt}{20pt}\selectfont}
+                {}
+                {1ex}
+                {\thesection. }
+    \titleformat{\subsection}
+                [display]
+                {\fontfamily{times}\fontsize{11pt}{13.2pt}\selectfont}
+                {\thesubsection}
+                {0em}
+                {}
+                {}
