@@ -5,7 +5,8 @@
 ```
 {
     "config": "excel-to-pdf.json",
-    "input": "sample.xls",
-    "output": "sample.pdf"
+    "logo": "./logos/logo.png",
+    "input": "template.xls",
+    "output": "./build/template.pdf"
 }
 ```

@@ -1,0 +1,38 @@
+\documentclass[11pt, landscape]{report}
+\usepackage[letterpaper, left=1.5cm, right=1.5cm, top=2cm, bottom=2cm]{geometry}
+\usepackage[utf8]{inputenc}
+\usepackage[english]{babel}
+\usepackage{graphicx}
+\usepackage{times}
+\usepackage{lipsum}
+\usepackage{fmtcount}
+\usepackage{pdfpages}
+
+\input{./lib/hf}
+\input{./lib/toc}
+
+\usepackage{xparse,letltxmacro}
+% save the original macro
+\LetLtxMacro\ORIincludepdf\includepdf
+
+\ExplSyntaxOn
+\RenewDocumentCommand{\includepdf}{O{}m}
+ {
+  % store the file name as a string
+  \tl_set:Nx \l_tmpa_tl { \tl_to_str:n { #2 } }
+  % replace commas (catcode 12) with commas (catcode 11)
+  \tl_replace_all:Nnf \l_tmpa_tl { , } { \char_generate:nn { `, } { 11 } }
+  \ORIincludepdf[#1]{\l_tmpa_tl}
+ }
+\cs_generate_variant:Nn \tl_replace_all:Nnn { Nnf }
+\ExplSyntaxOff
+
+\begin{document}
+\pagenumbering{gobble}
+\input{./lib/title}
+\pagenumbering{arabic}
+
+\input{./.tmp/pages}
+
+
+\end{document}
